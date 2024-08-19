@@ -5,13 +5,14 @@ import { GetProductByIdController } from "../Controllers/products/GetProductById
 import { GetAllProductsController } from "../Controllers/products/GetAllProductsController";
 import { DeleteProductsController } from "../Controllers/products/DeleteProductsController";
 import { UpdateProductController } from "../Controllers/products/UpdateProductController";
+import { isAuthenticated } from "../middlewares/IsAuthenticated";
 
 const upload = multer({ dest: "uploads/" });
 
 export const productsRoutes = Router();
 
-productsRoutes.post("/", upload.single("image"), new CreateProductsController().handle);
+productsRoutes.post("/", isAuthenticated, upload.single("image"), new CreateProductsController().handle);
 productsRoutes.get("/:id", new GetProductByIdController().handle);
 productsRoutes.get("/", new GetAllProductsController().handle);
-productsRoutes.delete("/:id", new DeleteProductsController().handle);
-productsRoutes.put("/:id", new UpdateProductController().handle);
+productsRoutes.delete("/:id", isAuthenticated, new DeleteProductsController().handle);
+productsRoutes.put("/:id", isAuthenticated, new UpdateProductController().handle);
